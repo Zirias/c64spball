@@ -102,45 +102,49 @@ irq:
 		dec	$d019
 		lda	$fd
 		beq	toleft
-		inc	$d000
-		inc	$d000
-		bne	rightdone
+		lda	$d000
+		clc
+		adc	#$4
+		sta	$d000
+		bcc	rightdone
 		inc	$d010
+rightdone:	cmp	#$40
 		bne	movey
-rightdone:	lda	$d010
+		lda	$d010
+		and	#$1
 		beq	movey
-		lda	#$40
-		cmp	$d000
-		bne	movey
 		jsr	flash
 		dec	$fd
 		beq	movey
 toleft:		lda	$d000
-		bne	leftstep
+		sec
+		sbc	#$4
+		sta	$d000
+		bcs	leftdone
 		dec	$d010
-leftstep:	dec	$d000
-		dec	$d000
-		lda	$d010
+leftdone:	cmp	#$18
 		bne	movey
-		lda	#$18
-		cmp	$d000
+		lda	$d010
+		and	#$1
 		bne	movey
 		jsr	flash
 		inc	$fd
 movey:		lda	$fe
 		beq	toup
-		inc	$d001
-		inc	$d001
-		lda	#$e6
-		cmp	$d001
+		lda	$d001
+		clc
+		adc	#$4
+		sta	$d001
+		cmp	#$e6
 		bne	movedone
 		jsr	flash
 		dec	$fe
 		beq	movedone
-toup:		dec	$d001
-		dec	$d001
-		lda	#$32
-		cmp	$d001
+toup:		lda	$d001
+		sec
+		sbc	#$4
+		sta	$d001
+		cmp	#$32
 		bne	movedone
 		jsr	flash
 		inc	$fe
